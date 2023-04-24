@@ -1,21 +1,24 @@
 import pygame
 import random
+import math
 from colors import *
 
 
 def sgn(x):
-    if x == 0:
+    if abs(x) < 1e-6:
         return 0
-    if x > 0:
+    elif x > 0:
         return 1
     else:
         return -1
 
 
-def mp(x, y, x0, y0):
-    print(int(x) // TILE + x0, len(map), x, y, y0, x0)
+# print(sgn(-3))
 
-    return map[int(x) // TILE + x0][int(y) // TILE + y0]
+def mp(x, y, x0, y0):
+    # print(int(x) // TILE + x0, len(map), x, y, y0, x0)
+
+    return map[int(x + 0.0001) // TILE + x0][int(y + 0.0001) // TILE + y0]
 
 
 def mapping():
@@ -58,13 +61,14 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         pressed = pygame.key.get_pressed()
-        for i in self.points():
-            pygame.draw.line(screen, RED, i, i)
-
-        if mp(self.pos[0], self.pos[1], 0, 3) or mp(self.pos[0], self.pos[1], 1, 3):
-
+        # for i in self.points():
+        # pygame.draw.line(screen, RED, i, i)
+        # print(i, mp(i[0], i[1], 0, 0), end=' ')
+        # pygame.draw.rect(screen, BLUE, (i[0] // TILE * TILE, i[1] // TILE * TILE, TILE, TILE), 1)
+        # print()
+        if mp(self.pos[0], self.pos[1], 0, 3) or mp(self.pos[0], self.pos[1], 1, 3) or mp(self.pos[0] + TILE - 1,
+                                                                                          self.pos[1], 1, 3):
             self.dir[1] = 0
-
             if pressed[pygame.K_SPACE]:
                 self.dir -= (0, 7)
         else:
@@ -75,29 +79,35 @@ class Player(pygame.sprite.Sprite):
             self.dir += (0.5, 0)
         else:
             self.dir -= (self.dir[0] / 6, 0)
+            if abs(self.dir[0]) < 0.01:
+                self.dir[0] = 0
         if self.dir[0] >= 4: self.dir[0] = 4
-        if self.dir[0] <= -4: self.dir[0] = -4
+        if self.dir[0] <= -6: self.dir[0] = -6
         if self.dir[1] >= 10: self.dir[1] = 10
         # if self.dir[1] <= -3: self.dir[1] = -3
-        self.pos += self.dir
+        self.pos[0] += self.dir[0]
+        # print(self.is_inb())
         if self.is_inb():
-            self.pos -= self.dir
+            self.pos[0] -= self.dir[0]
+            if self.dir[0] > 0:
+                self.pos[0] = (self.pos[0] + TILE - 1) // TILE * TILE
+            if self.dir[0] < 0:
+                self.pos[0] = (self.pos[0]) // TILE * TILE
+        self.pos[1] += self.dir[1]
+        if self.is_inb():
+            self.pos[1] -= self.dir[1]
 
-            # if self.pos[1]:
-            #     while not self.is_inb():
-            #         self.pos += (0, sgn(self.pos[1]))
-            #     self.pos -= (0, sgn(self.pos[1]))
-            # if self.pos[0]:
-            #     while not self.is_inb():
-            #         self.pos += (sgn(self.pos[0]), 0)
-            #     self.pos -= (sgn(self.pos[0]), 0)
+            if self.dir[1] > 0:
+                self.pos[1] = (self.pos[1] + TILE - 1) // TILE * TILE
+            if self.dir[1] < 0:
+                self.pos[1] = (self.pos[1]) // TILE * TILE
 
         self.rect.topleft = self.pos
 
     def is_inb(self):
         for i, j in self.points():
             if mp(i, j, 0, 0):
-                return True
+                return True, (i, j)
         return False
 
 
@@ -109,8 +119,8 @@ TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
 for x in range(len(map)):
     map[x][38] = 1
-    map[x][39] = 1
-    # map[i][35] = 1
+    # map[x][39] = 1
+    # map[x][35] = 1
 map[38][35] = 1
 map[37][35] = 1
 # for y in range(len(map[0])):
