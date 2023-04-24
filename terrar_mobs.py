@@ -90,9 +90,10 @@ class Player(pygame.sprite.Sprite):
         if self.is_inb():
             self.pos[0] -= self.dir[0]
             if self.dir[0] > 0:
-                self.pos[0] = (self.pos[0] + TILE - 1) // TILE * TILE
+                self.pos[0] = (int(self.pos[0]) + TILE - 1) // TILE * TILE
             if self.dir[0] < 0:
                 self.pos[0] = (self.pos[0]) // TILE * TILE
+            self.dir[0] = 0
         self.pos[1] += self.dir[1]
         if self.is_inb():
             self.pos[1] -= self.dir[1]
@@ -101,6 +102,7 @@ class Player(pygame.sprite.Sprite):
                 self.pos[1] = (self.pos[1] + TILE - 1) // TILE * TILE
             if self.dir[1] < 0:
                 self.pos[1] = (self.pos[1]) // TILE * TILE
+            self.dir[1] = 0
 
         self.rect.topleft = self.pos
 
@@ -123,6 +125,12 @@ for x in range(len(map)):
     # map[x][35] = 1
 map[38][35] = 1
 map[37][35] = 1
+map[34][35] = 1
+map[34][34] = 1
+
+map[39][31] = 1
+
+map[38][31] = 1
 # for y in range(len(map[0])):
 #     for x in range(len(map)):
 #         print(map[x][y], end=' ')
