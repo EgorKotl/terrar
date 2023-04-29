@@ -5,12 +5,11 @@ from colors import *
 
 
 def contur(text, clr1, clr2, x, y, n):
-    for i, j in [(1, -1), (1, 0), (1, 1), (0, -1), (0, 0), (0, 1), (-1, -1), (-1, 0), (-1, 1)]:
-        my_font = pg.font.SysFont('Times New Roman', 25)
-        text_surface = my_font.render(text, True, clr2)
+    my_font = pg.font.SysFont('Times New Roman', 25)
+    text_surface = my_font.render(text, True, clr2)
+    for i, j in [(1, -1), (1, 0), (1, 1), (0, -1), (0, 1), (-1, -1), (-1, 0), (-1, 1)]:
         screen.blit(text_surface, (x + i * n, y + j * n))
 
-    my_font = pg.font.SysFont('Times New Roman', 25)
     text_surface = my_font.render(text, True, clr1)
     screen.blit(text_surface, (x, y))
 
