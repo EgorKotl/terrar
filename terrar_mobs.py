@@ -21,7 +21,9 @@ def mp(x, y, x0, y0):
     return map[int(x + 0.0001) // TILE + x0][int(y + 0.0001) // TILE + y0]
 
 
-def mapping():
+def mapping(cam, pl):
+    # for x in range(int(pl.pos[0] // TILE - SC_WIDTH / 2), int(pl.pos[1] // TILE + SC_WIDTH / 2), TILE):
+    #     for y in range(int(pl.pos[0] // TILE - SC_HEIGHT / 2), int(pl.pos[1] // TILE + SC_HEIGHT / 2), TILE):
     for x in range(0, WIDTH, TILE):
         for y in range(0, HEIGHT, TILE):
 
@@ -29,7 +31,7 @@ def mapping():
             # print(map[i // TILE][j // TILE])
             if map[x // TILE][y // TILE]:
                 pass
-                pygame.draw.rect(screen, GRAY, (x, y, TILE, TILE))
+                pygame.draw.rect(screen, GRAY, (x + cam[0], y + cam[1], TILE, TILE))
             else:
                 pass
                 # pygame.draw.rect(screen, GRAY, (x, y, TILE, TILE), 1)
@@ -85,12 +87,15 @@ class Player(pygame.sprite.Sprite):
         if self.dir[0] <= -6: self.dir[0] = -6
         if self.dir[1] >= 10: self.dir[1] = 10
         # if self.dir[1] <= -3: self.dir[1] = -3
+        now = self.pos[:]
+
         self.pos[0] += self.dir[0]
+
         # print(self.is_inb())
         if self.is_inb():
             self.pos[0] -= self.dir[0]
             if self.dir[0] > 0:
-                self.pos[0] = (int(self.pos[0]) + TILE - 1) // TILE * TILE
+                self.pos[0] = (self.pos[0] + TILE - 1) // TILE * TILE
             if self.dir[0] < 0:
                 self.pos[0] = (self.pos[0]) // TILE * TILE
             self.dir[0] = 0
@@ -103,7 +108,8 @@ class Player(pygame.sprite.Sprite):
             if self.dir[1] < 0:
                 self.pos[1] = (self.pos[1]) // TILE * TILE
             self.dir[1] = 0
-
+        self.now = now - self.pos
+        # print(self.now)
         self.rect.topleft = self.pos
 
     def is_inb(self):
@@ -116,6 +122,9 @@ class Player(pygame.sprite.Sprite):
 v = pygame.Vector2
 WIDTH = 1365  # 136
 HEIGHT = 700  # 70
+
+SC_WIDTH = 1365
+SC_HEIGHT = 700
 FPS = 100
 TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
