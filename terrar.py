@@ -12,7 +12,7 @@ camera = pg.Vector2(0, 0)
 
 while running:
     clock.tick(FPS)
-    screen.fill(BLACK)
+    screen.fill(LIGHT_BLUE)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -24,9 +24,8 @@ while running:
     for s in all_sprites:
         screen.blit(s.image, s.rect.move(camera))
     # all_sprites.draw(screen)
-
+    contur(f"Здоровье: {player.hp}/{player.maxhp}", WHITE, BLACK, SC_WIDTH - 200, 1, 1.5)
     mapping(camera, player)
     pg.display.flip()
-    dt = clock.tick(60)
 
 pg.quit()
