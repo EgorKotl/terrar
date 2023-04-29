@@ -22,15 +22,14 @@ def mp(x, y, x0, y0):
 
 
 def mapping(cam, pl):
-    # for x in range(int(pl.pos[0] // TILE - SC_WIDTH / 2), int(pl.pos[1] // TILE + SC_WIDTH / 2), TILE):
-    #     for y in range(int(pl.pos[0] // TILE - SC_HEIGHT / 2), int(pl.pos[1] // TILE + SC_HEIGHT / 2), TILE):
-    for x in range(0, WIDTH, TILE):
-        for y in range(0, HEIGHT, TILE):
+    for x in range(int(pl.pos[0] - SC_WIDTH / 2) // TILE * TILE, int(pl.pos[0] + SC_WIDTH / 2), TILE):
+        for y in range(int(pl.pos[1] - SC_HEIGHT / 2) // TILE * TILE, int(pl.pos[1] + SC_HEIGHT / 2), TILE):
 
             # if map[i // TILE][j // TILE]:
             # print(map[i // TILE][j // TILE])
-            if map[x // TILE][y // TILE]:
+            if map[(x) // TILE][(y) // TILE]:
                 pass
+                # print(int(pl.pos[0] - SC_WIDTH / 2))
                 pygame.draw.rect(screen, GRAY, (x + cam[0], y + cam[1], TILE, TILE))
             else:
                 pass
@@ -120,11 +119,11 @@ class Player(pygame.sprite.Sprite):
 
 
 v = pygame.Vector2
-WIDTH = 1365  # 136
-HEIGHT = 700  # 70
+WIDTH = 13650  # 136
+HEIGHT = 7000  # 70
 
-SC_WIDTH = 1365
-SC_HEIGHT = 700
+SC_WIDTH = 1365  # 1365
+SC_HEIGHT = 700  # 700
 FPS = 100
 TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
