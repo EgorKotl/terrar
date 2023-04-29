@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 import random
 import math
 from colors import *
@@ -27,16 +27,15 @@ def mapping(cam, pl):
 
             # if map[i // TILE][j // TILE]:
             # print(map[i // TILE][j // TILE])
-            if map[(x) // TILE][(y) // TILE]:
-                pass
-                # print(int(pl.pos[0] - SC_WIDTH / 2))
-                pygame.draw.rect(screen, GRAY, (x + cam[0], y + cam[1], TILE, TILE))
-            else:
-                pass
-                # pygame.draw.rect(screen, GRAY, (x, y, TILE, TILE), 1)
+            if map[(x) // TILE][(y) // TILE] == 1:
+
+                pg.draw.rect(screen, BROWN, (x + cam[0], y + cam[1], TILE, TILE))
+            elif map[(x) // TILE][(y) // TILE] == 2:
+
+                pg.draw.rect(screen, GREEN, (x + cam[0], y + cam[1], TILE, TILE))
 
 
-class Player(pygame.sprite.Sprite):
+class Player(pg.sprite.Sprite):
     def points(self):
         an = []
         for j, i in [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]:
@@ -51,17 +50,21 @@ class Player(pygame.sprite.Sprite):
         return an
 
     def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.pos = pygame.Vector2((x, y))
-        self.dir = pygame.Vector2((0, 0))
+        pg.sprite.Sprite.__init__(self)
+        self.pos = pg.Vector2((x, y))
+        self.dir = pg.Vector2((0, 0))
 
-        self.image = pygame.Surface((20, 30))
-        self.image.fill(GREEN)
+        self.image = pg.Surface((20, 30))
+        try:
+            self.image = pg.image.load('img/terrar_player.png')
+            self.image.set_colorkey(WHITE)
+        except:
+            self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
     def update(self):
-        pressed = pygame.key.get_pressed()
+        pressed = pg.key.get_pressed()
         # for i in self.points():
         # pygame.draw.line(screen, RED, i, i)
         # print(i, mp(i[0], i[1], 0, 0), end=' ')
@@ -70,20 +73,20 @@ class Player(pygame.sprite.Sprite):
         if mp(self.pos[0], self.pos[1], 0, 3) or mp(self.pos[0], self.pos[1], 1, 3) or mp(self.pos[0] + TILE - 1,
                                                                                           self.pos[1], 1, 3):
             self.dir[1] = 0
-            if pressed[pygame.K_SPACE]:
+            if pressed[pg.K_SPACE]:
                 self.dir -= (0, 7)
         else:
             self.dir += (0, 0.5)
-        if pressed[pygame.K_a]:
+        if pressed[pg.K_a]:
             self.dir += (-0.5, 0)
-        elif pressed[pygame.K_d]:
+        elif pressed[pg.K_d]:
             self.dir += (0.5, 0)
         else:
             self.dir -= (self.dir[0] / 6, 0)
             if abs(self.dir[0]) < 0.01:
                 self.dir[0] = 0
         if self.dir[0] >= 4: self.dir[0] = 4
-        if self.dir[0] <= -6: self.dir[0] = -6
+        if self.dir[0] <= -4: self.dir[0] = -4
         if self.dir[1] >= 10: self.dir[1] = 10
         # if self.dir[1] <= -3: self.dir[1] = -3
         now = self.pos[:]
@@ -118,9 +121,9 @@ class Player(pygame.sprite.Sprite):
         return False
 
 
-v = pygame.Vector2
-WIDTH = 13650  # 136
-HEIGHT = 7000  # 70
+v = pg.Vector2
+WIDTH = 150000  # 136
+HEIGHT = 5000  # 70
 
 SC_WIDTH = 1365  # 1365
 SC_HEIGHT = 700  # 700
@@ -128,25 +131,25 @@ FPS = 100
 TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
 for x in range(len(map)):
-    map[x][38] = 1
-    # map[x][39] = 1
+    map[x][38] = 2
+    map[x][39] = 1
     # map[x][35] = 1
-map[38][35] = 1
-map[37][35] = 1
-map[34][35] = 1
-map[34][34] = 1
+map[38][35] = 2
+map[37][35] = 2
+map[34][35] = 2
+map[34][34] = 2
 
-map[39][31] = 1
+map[39][31] = 2
 
-map[38][31] = 1
+map[38][31] = 2
 # for y in range(len(map[0])):
 #     for x in range(len(map)):
 #         print(map[x][y], end=' ')
 #     print()
 # print(len(map), len(map[0]))
 # print(map[400])
-pygame.init()
-pygame.font.init()
-clock = pygame.time.Clock()
-screen = pygame.display.set_mode((750, 600), pygame.RESIZABLE)
-pygame.display.set_caption("terraria")
+pg.init()
+pg.font.init()
+clock = pg.time.Clock()
+screen = pg.display.set_mode((750, 600), pg.RESIZABLE)
+pg.display.set_caption("terraria")
