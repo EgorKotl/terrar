@@ -4,6 +4,17 @@ import math
 from colors import *
 
 
+def contur(text, clr1, clr2, x, y, n):
+    for i, j in [(1, -1), (1, 0), (1, 1), (0, -1), (0, 0), (0, 1), (-1, -1), (-1, 0), (-1, 1)]:
+        my_font = pg.font.SysFont('Times New Roman', 25)
+        text_surface = my_font.render(text, True, clr2)
+        screen.blit(text_surface, (x + i * n, y + j * n))
+
+    my_font = pg.font.SysFont('Times New Roman', 25)
+    text_surface = my_font.render(text, True, clr1)
+    screen.blit(text_surface, (x, y))
+
+
 def sgn(x):
     if abs(x) < 1e-6:
         return 0
@@ -13,8 +24,6 @@ def sgn(x):
         return -1
 
 
-# print(sgn(-3))
-
 def mp(x, y, x0, y0):
     # print(int(x) // TILE + x0, len(map), x, y, y0, x0)
 
@@ -22,8 +31,8 @@ def mp(x, y, x0, y0):
 
 
 def mapping(cam, pl):
-    for x in range(int(pl.pos[0] - SC_WIDTH / 2) // TILE * TILE, int(pl.pos[0] + SC_WIDTH / 2), TILE):
-        for y in range(int(pl.pos[1] - SC_HEIGHT / 2) // TILE * TILE, int(pl.pos[1] + SC_HEIGHT / 2), TILE):
+    for x in range(int(pl.pos[0] - SC_WIDTH / 2) // TILE * TILE, int(pl.pos[0] + SC_WIDTH / 2) + TILE, TILE):
+        for y in range(int(pl.pos[1] - SC_HEIGHT / 2) // TILE * TILE, int(pl.pos[1] + SC_HEIGHT / 2) + TILE, TILE):
 
             # if map[i // TILE][j // TILE]:
             # print(map[i // TILE][j // TILE])
@@ -53,6 +62,8 @@ class Player(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.pos = pg.Vector2((x, y))
         self.dir = pg.Vector2((0, 0))
+        self.hp = 100
+        self.maxhp = 100
 
         self.image = pg.Surface((20, 30))
         try:
@@ -78,15 +89,19 @@ class Player(pg.sprite.Sprite):
         else:
             self.dir += (0, 0.5)
         if pressed[pg.K_a]:
-            self.dir += (-0.5, 0)
+            if self.dir[0] > 0:
+                self.dir[0] = 0
+            self.dir += (-0.1, 0)
         elif pressed[pg.K_d]:
-            self.dir += (0.5, 0)
+            if self.dir[0] < 0:
+                self.dir[0] = 0
+            self.dir += (0.1, 0)
         else:
             self.dir -= (self.dir[0] / 6, 0)
             if abs(self.dir[0]) < 0.01:
                 self.dir[0] = 0
-        if self.dir[0] >= 4: self.dir[0] = 4
-        if self.dir[0] <= -4: self.dir[0] = -4
+        if self.dir[0] >= 2: self.dir[0] = 2
+        if self.dir[0] <= -2: self.dir[0] = -2
         if self.dir[1] >= 10: self.dir[1] = 10
         # if self.dir[1] <= -3: self.dir[1] = -3
         now = self.pos[:]
@@ -127,12 +142,13 @@ HEIGHT = 5000  # 70
 
 SC_WIDTH = 1365  # 1365
 SC_HEIGHT = 700  # 700
-FPS = 100
+FPS = 60
 TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
 for x in range(len(map)):
     map[x][38] = 2
-    map[x][39] = 1
+    for y in range(39, 100):
+        map[x][y] = 1
     # map[x][35] = 1
 map[38][35] = 2
 map[37][35] = 2
