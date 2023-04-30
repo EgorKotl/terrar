@@ -101,7 +101,7 @@ class Player(pg.sprite.Sprite):
                 self.dir[0] = 0
         if self.dir[0] >= 2: self.dir[0] = 2
         if self.dir[0] <= -2: self.dir[0] = -2
-        if self.dir[1] >= 10: self.dir[1] = 10
+        if self.dir[1] >= 20: self.dir[1] = 20
         # if self.dir[1] <= -3: self.dir[1] = -3
         now = self.pos[:]
 
@@ -153,6 +153,7 @@ map[38][35] = 2
 map[37][35] = 2
 map[34][35] = 2
 map[34][34] = 2
+map[34][2] = 1
 
 map[39][31] = 2
 
