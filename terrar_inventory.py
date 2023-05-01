@@ -20,7 +20,8 @@ class element(pg.sprite.Sprite):
 class inventory():
     def __init__(self):
         self.inv = [[(0, 0) for i in range(10)] for j in range(6)]
-
+        self.inv[0][0] = (1, 1)
+        self.tec = 0
         self.elements = pg.sprite.Group()
         for i in range(10):
             el = element(40 * i + 5, 5, self.get_element(0, i))
