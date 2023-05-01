@@ -25,8 +25,8 @@ def sgn(x):
 
 def mp(x, y, x0, y0):
     # print(int(x) // TILE + x0, len(map), x, y, y0, x0)
-
-    return map[int(x + 0.0001) // TILE + x0][int(y + 0.0001) // TILE + y0]
+    if int(x + 0.0001) // TILE + x0 > 0 and int(y + 0.0001) // TILE + y0 > 0:
+        return map[int(x + 0.0001) // TILE + x0][int(y + 0.0001) // TILE + y0]
 
 
 def mapping(cam, pl):
@@ -144,20 +144,28 @@ SC_HEIGHT = 700  # 700
 FPS = 60
 TILE = 10
 map = [[0] * (2 * HEIGHT // TILE) for i in range(2 * WIDTH // TILE)]  # x,y
+for x in range(len(map[0])):
+    map[0][x] = 3
+    map[-1][x] = 3
+
 for x in range(len(map)):
-    map[x][38] = 2
-    for y in range(39, 100):
+
+    map[x][108] = 2
+    for y in range(109, 300):
+        map[x][0] = 3
+        map[x][-1] = 3
+
         map[x][y] = 1
     # map[x][35] = 1
-map[38][35] = 2
-map[37][35] = 2
-map[34][35] = 2
-map[34][34] = 2
-map[34][2] = 1
+map[38][105] = 2
+map[37][105] = 2
+map[34][105] = 2
+map[34][104] = 2
+map[34][102] = 1
 
-map[39][31] = 2
+map[39][101] = 2
 
-map[38][31] = 2
+map[38][101] = 2
 # for y in range(len(map[0])):
 #     for x in range(len(map)):
 #         print(map[x][y], end=' ')
